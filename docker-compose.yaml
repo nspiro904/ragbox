@@ -1,0 +1,42 @@
+services:
+  web:
+    image: node:alpine
+    command: sh -c "npx pnpm install && npm run dev -- --host 0.0.0.0"
+    user: ${UID}:${GID}
+    ports: 
+      - 5426:5173
+    volumes:
+      - ${PWD}/web:/web
+    environment:
+      - HOME=/web
+    working_dir: /web
+
+  api:
+    image: python:3.9
+    command: sh -c "pip install --no-cache-dir -r requirements.txt && .local/bin/fastapi run app/main.py --port 8000"
+    user: ${UID}:${GID}
+    environment:
+      - HOME=/prj
+    ports:
+      - 8000:8000
+    working_dir: /prj
+    volumes:
+      - ${PWD}/api:/prj
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    networks:
+      - default
+      - ollama_default
+      - chroma_default
+
+networks:
+  ollama_default:
+    external: true
+  chroma_default:
+    external: true

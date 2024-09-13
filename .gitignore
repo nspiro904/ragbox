@@ -1,0 +1,5 @@
+**/api/.local/*
+
+**/web/.cache/*
+**/web/.local/*
+**/web/.npm/*
