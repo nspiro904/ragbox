@@ -1,10 +1,13 @@
 services:
   web:
     image: node:alpine
-    command: sh -c "npx pnpm install && npm run dev -- --host 0.0.0.0"
+    command: sh -c "npm install && npm run dev"
     user: ${UID}:${GID}
     ports: 
-      - 5426:5173
+      - 5426:3000
+      - 4440:4440 #these 3 ports are needed for vinxi hmr
+      - 4441:4441
+      - 4442:4442
     volumes:
       - ${PWD}/web:/web
     environment:
