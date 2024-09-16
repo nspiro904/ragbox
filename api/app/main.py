@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from lib.session import Session, SessionRequest, ChatRequest
+from lib.ollama import createModel, CreateModelRequest
 
 app = FastAPI()
 
@@ -32,5 +33,15 @@ def chat(chatRequest: ChatRequest, sessionId: str, response: Response):
     session = sessions[sessionId]
     chats = session.chats
     data = session.ask_llm(chatRequest.chat, chats)
-
     return data
+
+@app.post("/model/new")
+def newModel(response: Response, createModelRequest: CreateModelRequest):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+
+    data = createModel(createModelRequest.name, createModelRequest.baseModel, createModelRequest.systemPrompt)
+    
+    return {data["status"]}
+
+
