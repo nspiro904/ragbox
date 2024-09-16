@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from lib.session import Session, SessionRequest, ChatRequest
-from lib.ollama import createModel, CreateModelRequest
+from lib.ollama import _createModel, CreateModelRequest, _getModelInfo, UpdateModelRequest, _deleteModel
 
 app = FastAPI()
 
@@ -40,8 +40,29 @@ def newModel(response: Response, createModelRequest: CreateModelRequest):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Credentials"] = "true"
 
-    data = createModel(createModelRequest.name, createModelRequest.baseModel, createModelRequest.systemPrompt)
-    
+    data = _createModel(createModelRequest.name, createModelRequest.baseModel, createModelRequest.systemPrompt)
     return {data["status"]}
 
+@app.get("/model/{modelName}")
+def getModel(response: Response, modelName: str):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
 
+    data = _getModelInfo(modelName)
+    return data
+
+@app.post("/model/{modelName}")
+def updateModel(response: Response, modelName: str, updateModelRequest: UpdateModelRequest):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+
+    data = _createModel(modelName, updateModelRequest.baseModel, updateModelRequest.systemPrompt)
+    return data
+
+@app.delete("/model/{modelName}")
+def deleteModel(response: Response, modelName: str):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    
+    data = _deleteModel(modelName)
+    return data

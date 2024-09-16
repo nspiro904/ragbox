@@ -1,5 +1,5 @@
 **/.cache/*
 **/.local/*
 **/web/.npm/*
-
+**/__pycache__/*
 .env
