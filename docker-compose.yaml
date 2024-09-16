@@ -34,6 +34,19 @@ services:
       - default
       - ollama_default
       - chroma_default
+  pb:
+    image: alpine:latest
+    user: ${UID}:${GID}
+    entrypoint: /pb/entrypoint.sh
+    command: "/pb/pocketbase serve --http 0.0.0.0:8090"
+    ports:
+      - 8090:8090
+    working_dir: /pb
+    environment:
+      - HOME=/pb
+      - PB_VERSION=0.19.4
+    volumes:
+      - ${PWD}/pb:/pb
 
 networks:
   ollama_default:

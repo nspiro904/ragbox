@@ -13,7 +13,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sessions: dict = {} #should be stored in some db
+#will be stored in pb, waiting for patch to python pb sdk that will resolve httpx dependency conflicts
+sessions: dict = {} 
 
 @app.post("/chat")
 def initialize(response: Response, request: SessionRequest):
