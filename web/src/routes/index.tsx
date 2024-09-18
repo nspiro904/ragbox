@@ -1,5 +1,5 @@
 import { Title } from "@solidjs/meta";
-
+import AnchorButton from "~/components/AnchorButton/AnchorButton";
 export default function Home() {
 
   
@@ -7,7 +7,8 @@ export default function Home() {
     <main>
       <Title>Rag in a Box</Title>
       <h1>Rag in a Box</h1>
-      <a href=""></a>
+      <AnchorButton text="hello" route="./test" />
+      <AnchorButton text="Create Model" route="./create"/>
     </main>
   );
 }
