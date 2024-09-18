@@ -21,7 +21,7 @@ services:
     environment:
       - HOME=/prj
     ports:
-      - 8000:8000
+      - 8224:8000
     working_dir: /prj
     volumes:
       - ${PWD}/api:/prj

@@ -1,3 +1,9 @@
+:root {
+  --btn-color: cornflowerblue;
+  --font-color: black;
+
+}
+
 body {
   font-family: Gordita, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
@@ -36,4 +42,11 @@ p {
   p {
     max-width: none;
   }
+}
+
+.button {
+  background-color: var(--btn-color);
+  padding: .5em 1em;
+  border-radius: .8em;
+  color: black;
 }
