@@ -32,8 +32,7 @@ def chat(chatRequest: ChatRequest, sessionId: str, response: Response):
     response.headers["Access-Control-Allow-Credentials"] = "true"
 
     session = sessions[sessionId]
-    chats = session.chats
-    data = session.ask_llm(chatRequest.chat, chats)
+    data = session.ask_llm(chatRequest.chat)
     return data
 
 @app.post("/model/new")
@@ -42,7 +41,7 @@ def newModel(response: Response, createModelRequest: CreateModelRequest):
     response.headers["Access-Control-Allow-Credentials"] = "true"
 
     data = _createModel(createModelRequest.name, createModelRequest.baseModel, createModelRequest.systemPrompt)
-    return {data["status"]}
+    return data
 
 @app.get("/model/{modelName}")
 def getModel(response: Response, modelName: str):

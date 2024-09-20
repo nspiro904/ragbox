@@ -40,16 +40,17 @@ class Session():
         return contexts
     
     #query indicates whether the llm should search for documents for context
-    def ask_llm(self, question, messages, query=False):
+
+    def ask_llm(self, question, query=False):
         if query:
             docs = self.query_chroma(question)
-            messages.append(
+            self.chats.append(
             {
             'role': 'user',
             'content': f'Information: {docs}. Question: {question}'
             })
         else:
-            messages.append(
+            self.chats.append(
             {
             'role': 'user',
             'content': f'Question: {question}',
