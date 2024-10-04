@@ -1,28 +1,36 @@
-import "./create.scss"
+import "./new.scss"
 
 export default function create() {
 
-  async function handleSubmit(e: SubmitEvent) {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    console.log("hi");
-    
-    const modelRequest = {
-      name: data.get("name"),
-      baseModel: data.get("baseModel"),
-      systemPrompt: data.get("systemPrompt")
-    }
 
-    //move this uri
-    const response = await fetch( "http://cannabot-api:8000/model/new",{
+  async function sendRequest(modelRequest) {
+    "use server";
+
+    const response = await fetch( `${import.meta.env.VITE_MODEL_API}/model/new`,{
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(modelRequest)
     });
-    console.log(response);
+    const data = await response.json();
+
+    return data;
+  }
+
+  async function handleSubmit(e: SubmitEvent) {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const modelRequest = {
+      name: data.get("name"),
+      baseModel: data.get("baseModel"),
+      systemPrompt: data.get("systemPrompt")
+    }
     
+    //move this uri
+    const response = await sendRequest(modelRequest);
+
+    if (response.status === "success") alert("Model Created Successfully");
   }
   return (
   <div>

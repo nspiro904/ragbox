@@ -8,7 +8,7 @@ export default function Home() {
       <Title>Rag in a Box</Title>
       <h1>Rag in a Box</h1>
       <AnchorButton text="hello" route="./test" />
-      <AnchorButton text="Create Model" route="./create"/>
+      <AnchorButton text="Create Model" route="./model/new"/>
     </main>
   );
 }

@@ -20,8 +20,8 @@ services:
     user: ${UID}:${GID}
     environment:
       - HOME=/prj
-    ports:
-      - 8224:8000
+    expose:
+      - 8000
     working_dir: /prj
     volumes:
       - ${PWD}/api:/prj
