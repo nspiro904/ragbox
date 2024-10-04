@@ -1,19 +1,16 @@
 services:
   web:
     image: node:alpine
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npx pnpm install && npm run dev -- --host 0.0.0.0"
     user: ${UID}:${GID}
     ports: 
-      - 5426:3000
-      - 4440:4440 #these 3 ports are needed for vinxi hmr
-      - 4441:4441
-      - 4442:4442
+      - 5173:5173
     volumes:
       - ${PWD}/web:/web
     environment:
       - HOME=/web
     working_dir: /web
-
+    
   api:
     image: python:3.9
     command: sh -c "pip install --no-cache-dir -r requirements.txt && .local/bin/fastapi run app/main.py --port 8000"
