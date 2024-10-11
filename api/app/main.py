@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from lib.session import Session, SessionRequest, ChatRequest
 from lib.ollama import _createModel, CreateModelRequest, _getModelInfo, UpdateModelRequest, _deleteModel
@@ -48,7 +48,11 @@ def getModel(response: Response, modelName: str):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Credentials"] = "true"
 
-    data = _getModelInfo(modelName)
+    try:
+        data = _getModelInfo(modelName)
+    except:
+        raise HTTPException(status_code=404, detail="Model not found")
+
     return data
 
 @app.post("/model/{modelName}")
