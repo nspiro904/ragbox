@@ -1,3 +1,5 @@
+import {API_URL} from '$env/static/private'
+
 export const actions = {
   default: async ({request}) => {
 
@@ -8,7 +10,7 @@ export const actions = {
     const systemPrompt = data.get('systemPrompt');
 
 
-    const response = await fetch("http://ragbox-api-1:8000/model/new",
+    const response = await fetch(`${API_URL}:8000/model/new`,
       {
         method: "POST",
         headers: {

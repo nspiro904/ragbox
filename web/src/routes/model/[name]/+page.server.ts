@@ -1,9 +1,11 @@
 import {error} from '@sveltejs/kit'
+import {API_URL} from '$env/static/private'
+
 
 export async function load( {params}) {
   const {name} = params;
     
-  const response = await fetch(`http://ragbox-api-1:8000/model/${name}`);
+  const response = await fetch(`${API_URL}/model/${name}`);
 
   if(response.status === 404)
     error(404, {
@@ -27,7 +29,7 @@ export const actions = {
     const baseModel = data.get('base');
     const systemPrompt = data.get('systemPrompt');
 
-    const response = await fetch(`http://ragbox-api-1:8000/model/${modelName}`,
+    const response = await fetch(`${API_URL}/model/${modelName}`,
       {
         method: "POST",
         headers: {
