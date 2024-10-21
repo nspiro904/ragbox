@@ -28,5 +28,9 @@ def _getModelInfo(modelName: str):
   return response
 
 def _deleteModel(modelName: str):
-   response = ollama.delete(modelName)
-   return response
+  response = ollama.delete(modelName)
+  return response
+
+def _getModelList():
+  response = ollama.list()
+  return response

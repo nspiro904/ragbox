@@ -1,7 +1,8 @@
 from fastapi import FastAPI, Response, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from lib.session import Session, SessionRequest, ChatRequest
-from lib.ollama import _createModel, CreateModelRequest, _getModelInfo, UpdateModelRequest, _deleteModel
+from lib.ollama import _createModel, CreateModelRequest, _getModelInfo, UpdateModelRequest, _deleteModel, _getModelList
+from lib.tree import BinaryTree
 
 app = FastAPI()
 
@@ -12,9 +13,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+ 
 #will be stored in pb, waiting for patch to python pb sdk that will resolve httpx dependency conflicts
 sessions: dict = {} 
+searchTree: BinaryTree = BinaryTree()
 
 @app.post("/chat")
 def initialize(response: Response, request: SessionRequest):
@@ -40,8 +42,24 @@ def newModel(response: Response, createModelRequest: CreateModelRequest):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Credentials"] = "true"
 
-    data = _createModel(createModelRequest.name, createModelRequest.baseModel, createModelRequest.systemPrompt)
+    try:
+        data = _createModel(createModelRequest.name, createModelRequest.baseModel, createModelRequest.systemPrompt)
+    except:
+        raise HTTPException(status_code=400, detail="Model Creation Failed")
+    
+    searchTree.insert(createModelRequest.name)
+    searchTree.trace(createModelRequest.name)
+
     return data
+
+@app.get("/model/list")
+def getModelList(response: Response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+
+    data = _getModelList()
+    return data
+
 
 @app.get("/model/{modelName}")
 def getModel(response: Response, modelName: str):
@@ -55,13 +73,19 @@ def getModel(response: Response, modelName: str):
 
     return data
 
+
+    
 @app.post("/model/{modelName}")
 def updateModel(response: Response, modelName: str, updateModelRequest: UpdateModelRequest):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Credentials"] = "true"
 
-    data = _createModel(modelName, updateModelRequest.baseModel, updateModelRequest.systemPrompt)
+    try:
+        data = _createModel(modelName, updateModelRequest.baseModel, updateModelRequest.systemPrompt)
+    except:
+        raise HTTPException(status_code=400, detail="Invalid model settings")
     return data
+
 
 @app.delete("/model/{modelName}")
 def deleteModel(response: Response, modelName: str):
@@ -70,3 +94,4 @@ def deleteModel(response: Response, modelName: str):
     
     data = _deleteModel(modelName)
     return data
+
